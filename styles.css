@@ -1,0 +1,346 @@
+/**
+ * Interactive Timeline styles.
+ *
+ * @package    mod_timeline
+ * @copyright  2025 Raccoon Dev
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+.mod-timeline {
+    border: 1px solid #e3e6ec;
+    border-radius: 10px;
+    padding: 16px;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+.mod-timeline__header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.mod-timeline__title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.mod-timeline__intro {
+    color: #4a5568;
+}
+
+.mod-timeline__scroll {
+    margin-top: 14px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    padding-top: 70px;
+}
+
+.mod-timeline__track {
+    display: flex;
+    gap: 30px;
+    position: relative;
+    scroll-snap-type: x proximity;
+    padding: 50px 20px 10px;
+    min-height: 180px;
+}
+
+.timeline-event {
+    position: relative;
+    min-width: 200px;
+    max-width: 260px;
+    scroll-snap-align: start;
+    border: 2px solid #d5d9e2;
+    background: #ffffff;
+    color: #1a202c;
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-align: center;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    z-index: 1;
+}
+
+/* Vertical line from timeline to event */
+.timeline-event::before {
+    content: '';
+    position: absolute;
+    top: -67px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 47px;
+    background: #cbd5e1;
+    z-index: 0;
+}
+
+.timeline-event.is-active:before{
+    top:-58px;
+}
+
+/* Circle dot on the main timeline */
+.timeline-event::after {
+    content: '';
+    position: absolute;
+    top: -82px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    z-index: 1;
+}
+
+.timeline-event:focus {
+    outline: 2px solid #2b6cb0;
+    outline-offset: 2px;
+}
+
+.timeline-event:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+}
+
+.timeline-event.is-active {
+    background: linear-gradient(135deg, #2563eb, #33b1ff);
+    color: #ffffff;
+    border-color: #1a73e8;
+    box-shadow: 0 10px 20px rgba(30, 64, 175, 0.25);
+    transform: translateY(-4px);
+}
+
+.timeline-event.is-active::before {
+    background: #3b82f6;
+    height: 34px;
+}
+
+.timeline-event.is-active::after {
+    background: #2563eb;
+    border-color: #fff;
+    width: 16px;
+    height: 16px;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.2);
+    top: -80px;
+}
+
+.timeline-event__title {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.timeline-event__shortdesc {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    font-weight: 400;
+    line-height: 1.3;
+    opacity: 0.85;
+}
+
+.timeline-event.is-active .timeline-event__shortdesc {
+    opacity: 0.95;
+}
+
+.timeline-detail {
+    margin-top: 18px;
+    border: 1px solid #e3e6ec;
+    border-radius: 12px;
+    padding: 16px;
+    background: #f8fafc;
+}
+
+.timeline-detail__date {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.timeline-detail__title {
+    margin: 8px 0;
+    font-size: 1.15rem;
+}
+
+.timeline-detail__description {
+    margin: 0;
+    color: #374151;
+}
+
+/* Responsive media in description */
+.timeline-detail__description img,
+.timeline-detail__description video,
+.timeline-detail__description iframe {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.timeline-detail__description video {
+    display: block;
+    width: 100%;
+}
+
+.timeline-detail__media {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    color: #1d4ed8;
+}
+
+.timeline-detail__empty,
+.timeline-empty {
+    color: #6b7280;
+}
+
+/* Timeline date markers above events */
+.timeline-date-marker {
+    position: absolute;
+    top: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    background: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    z-index: 2;
+}
+
+/* Year separators */
+.timeline-year-separator {
+    position: absolute;
+    top: 31px;
+    width: 3px;
+    height: 30px;
+    background:none;
+    border-radius: 2px;
+    z-index: 2;
+}
+
+.timeline-year-separator::before {
+    content: attr(data-year);
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 2px solid #cbd5e1;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Min year marker at the start */
+.timeline-min-year-marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 2px solid #cbd5e1;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+/* Vertical timeline mode */
+.mod-timeline--vertical .mod-timeline__scroll {
+    padding-top: 10px;
+    padding-left: 60px;
+}
+
+.mod-timeline--vertical .mod-timeline__track {
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px 20px 20px 40px;
+    min-height: auto;
+}
+
+/* Vertical line on the left */
+.mod-timeline--vertical .mod-timeline__track::before {
+    top: 0;
+    bottom: 0;
+    left: 20px;
+    right: auto;
+    width: 3px;
+    height: auto;
+    background: linear-gradient(to bottom, #e5e7eb 0%, #3b82f6 50%, #e5e7eb 100%);
+}
+
+.mod-timeline--vertical .timeline-event {
+    min-width: auto;
+    max-width: 600px;
+    width: 100%;
+}
+
+/* Horizontal line from timeline to event */
+.mod-timeline--vertical .timeline-event::before {
+    top: 50%;
+    left: -42px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 2px;
+}
+
+/* Circle dot on the main timeline */
+.mod-timeline--vertical .timeline-event::after {
+    top: 50%;
+    left: -47px;
+    transform: translateY(-50%);
+}
+
+.mod-timeline--vertical .timeline-event.is-active::before {
+    width: 34px;
+    height: 2px;
+}
+
+.mod-timeline--vertical .timeline-event.is-active::after {
+    left: -49px;
+}
+
+.mod-timeline--vertical .timeline-date-marker {
+    top: 50%;
+    left: -110px;
+    transform: translateY(-50%);
+}
+
+.mod-timeline--vertical .timeline-year-separator {
+    left: 10px;
+    top: auto;
+    width: 25px;
+    height: 3px;
+}
+
+.mod-timeline--vertical .timeline-year-separator::before {
+    top: 50%;
+    left: -80px;
+    transform: translateY(-50%);
+}
+
+.mod-timeline--vertical .timeline-detail {
+    margin-left: 0;
+}
+
+@media (max-width: 720px) {
+    .timeline-event {
+        min-width: 160px;
+    }
+
+    .mod-timeline {
+        padding: 14px;
+    }
+}

@@ -1,0 +1,82 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_timeline/view
+
+    Template for displaying Interactive Timeline.
+
+    Context variables required for this template:
+    * instanceid - Timeline instance ID
+    * name - Timeline name
+    * openlink - Open link text
+    * displaymode - Display mode (horizontal/vertical)
+    * events - Array of event objects
+    * noevents - No events message
+
+    Example context (json):
+    {
+        "instanceid": "123",
+        "name": "Course Timeline",
+        "openlink": "Open",
+        "displaymode": "horizontal",
+        "events": [
+            {
+                "index": 0,
+                "timestamp": 1672531200,
+                "title": "Event Title",
+                "shortdesc": "Short description",
+                "hasshortdesc": true
+            }
+        ],
+        "noevents": "No events"
+    }
+}}
+<div class="mod-timeline {{#isvertical}}mod-timeline--vertical{{/isvertical}}" data-instance="{{instanceid}}" data-openlink="{{openlink}}" data-displaymode="{{displaymode}}">
+
+    <div class="mod-timeline__scroll" aria-label="{{name}}">
+        <div class="mod-timeline__track">
+            {{#events}}
+                <button class="timeline-event" type="button" data-index="{{index}}" data-timestamp="{{timestamp}}" aria-pressed="false">
+                    <span class="timeline-event__title">{{title}}</span>
+                    {{#hasshortdesc}}
+                        <span class="timeline-event__shortdesc">{{shortdesc}}</span>
+                    {{/hasshortdesc}}
+                </button>
+            {{/events}}
+            {{^events}}
+                <div class="timeline-empty">{{noevents}}</div>
+            {{/events}}
+        </div>
+    </div>
+
+    <div class="timeline-detail" id="timeline-detail-{{instanceid}}">
+        {{#firstevent}}
+            <div class="timeline-detail__date">{{datestring}}</div>
+            <h3 class="timeline-detail__title">{{title}}</h3>
+            {{#hasdescription}}
+                <div class="timeline-detail__description">{{{description}}}</div>
+            {{/hasdescription}}
+        {{/firstevent}}
+        {{^firstevent}}
+            <div class="timeline-detail__empty">{{noevents}}</div>
+        {{/firstevent}}
+    </div>
+
+    <script type="application/json" class="mod-timeline__data">
+        {{{eventsjson}}}
+    </script>
+</div>
