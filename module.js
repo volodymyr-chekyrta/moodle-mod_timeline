@@ -48,6 +48,36 @@
         }
         
         modal.innerHTML = html;
+        
+        // Process media elements to ensure proper loading
+        var images = modal.querySelectorAll('img');
+        images.forEach(function(img) {
+            // Force reload images to ensure proper display
+            if (img.src) {
+                var originalSrc = img.src;
+                img.src = '';
+                img.src = originalSrc;
+            }
+            // Make images responsive in modal
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+        });
+        
+        var videos = modal.querySelectorAll('video');
+        videos.forEach(function(video) {
+            // Ensure videos have controls
+            video.setAttribute('controls', 'controls');
+            video.style.maxWidth = '100%';
+            video.style.height = 'auto';
+            // Force reload video source
+            video.load();
+        });
+        
+        var iframes = modal.querySelectorAll('iframe');
+        iframes.forEach(function(iframe) {
+            iframe.style.maxWidth = '100%';
+        });
+        
         backdrop.appendChild(modal);
         document.body.appendChild(backdrop);
         

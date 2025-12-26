@@ -2,7 +2,7 @@
  * Interactive Timeline styles.
  *
  * @package    mod_timeline
- * @copyright  2025 Raccoon Dev
+ * @copyright  2024 Raccoon Dev
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -343,4 +343,11 @@
     .mod-timeline {
         padding: 14px;
     }
+}
+
+/* Admin form styles - event separators */
+#page-mod-timeline-mod #id_eventscontainer .fitem[id*="eventcontenttype"] {
+    border-bottom: 3px solid #e3e6ec;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
 }

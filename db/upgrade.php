@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version metadata for the Interactive Timeline activity.
+ * Timeline upgrade script.
  *
  * @package    mod_timeline
  * @copyright  2025 Raccoon Dev
@@ -25,8 +25,21 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_timeline';
-$plugin->version   = 2025122600;
-$plugin->requires  = 2024042200; // Moodle 4.4+.
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.0.2';
+function xmldb_timeline_upgrade($oldversion) {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    if ($oldversion < 2024121100) {
+        // Add displaymode field to timeline table.
+        $table = new xmldb_table('timeline');
+        $field = new xmldb_field('displaymode', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'horizontal', 'eventsjson');
+
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2024121100, 'timeline');
+    }
+
+    return true;
+}

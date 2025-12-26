@@ -37,7 +37,15 @@ class mod_timeline_mod_form extends moodleform_mod {
      * Form definition.
      */
     public function definition() {
+        global $PAGE;
+        
         $mform = $this->_form;
+        
+        // Load CSS for admin form
+        $PAGE->requires->css('/mod/timeline/styles.css');
+        
+        // Load JavaScript using AMD module (best practice for Moodle 5.1+)
+        $PAGE->requires->js_call_amd('mod_timeline/admin_form', 'init');
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
@@ -110,139 +118,18 @@ class mod_timeline_mod_form extends moodleform_mod {
             true
         );
 
-        // Add remove button for each repeat after repeat_elements renders them.
-        $script = <<<'SCRIPT'
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Find all event repeats by looking for eventtitle fields
-    var titleInputs = document.querySelectorAll('input[name^="eventtitle"]');
 
-    if (titleInputs.length === 0) {
-        return;
-    }
 
-    titleInputs.forEach(function(titleInput) {
-        // Extract repeat index from name, e.g., "eventtitle[0]" -> 0
-        var match = titleInput.name.match(/\[(\d+)\]/);
-        if (!match) return;
 
-        var repeatIndex = match[1];
-        
-        // Find all fields for this repeat
-        var contentTypeSelect = document.querySelector("select[name='eventcontenttype[" + repeatIndex + "]']");
-        var deletedInput = document.querySelector("input[name='eventdeleted[" + repeatIndex + "]']");
-
-        if (!titleInput || !deletedInput || !contentTypeSelect) {
-            return;
-        }
-
-        // Find the LAST fitem for this repeat (eventcontenttype is last visible field)
-        var fitem = contentTypeSelect.closest('.fitem');
-        if (!fitem) {
-            return;
-        }
-        
-        // Add visual separator after each event group
-        fitem.style.borderBottom = '3px solid #e3e6ec';
-        fitem.style.paddingBottom = '15px';
-        fitem.style.marginBottom = '20px';
-
-        // Create remove button
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'btn btn-danger btn-sm';
-        var eventTitle = titleInput.value.trim() || 'Event ' + (parseInt(repeatIndex) + 1);
-        btn.textContent = 'Remove: ' + eventTitle;
-        btn.style.marginTop = '15px';
-        btn.style.marginBottom = '0';
-        btn.style.display = 'block';
-        btn.title = 'Delete this event';
-
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            // Confirm before deletion
-            if (!confirm('Are you sure you want to remove this event?')) {
-                return;
+        // Добавить required-правило для всех eventtitle и eventdate.
+        $repeatcount = $repeatno;
+        for ($i = 0; $i < $repeatcount; $i++) {
+            if ($mform->elementExists("eventtitle[{$i}]")) {
+                $mform->addRule("eventtitle[{$i}]", get_string('required'), 'required', null, 'client');
             }
-
-            // Hide all field fitems for this repeat
-            var allFitems = document.querySelectorAll('.fitem');
-            allFitems.forEach(function(f) {
-                var inputs = f.querySelectorAll('input, textarea, select');
-                var shouldHide = false;
-                inputs.forEach(function(inp) {
-                    // Check both simple names like eventtitle[0] and date names like eventdate[0][day]
-                    if (inp.name && (inp.name.includes('[' + repeatIndex + ']') || inp.name.includes('[' + repeatIndex + '][') )) {
-                        shouldHide = true;
-                    }
-                });
-                if (shouldHide) {
-                    f.style.display = 'none';
-                }
-            });
-
-            // Set eventdeleted flag
-            deletedInput.value = '1';
-
-            // Hide the button
-            btn.style.display = 'none';
-            
-            // Remove separator border from hidden event
-            fitem.style.borderBottom = 'none';
-            fitem.style.paddingBottom = '0';
-            fitem.style.marginBottom = '0';
-        });
-
-        // Insert button INSIDE the fitem, at the bottom
-        var felement = fitem.querySelector('.felement');
-        if (felement) {
-            // Add flex layout to the container
-            var colMd9 = felement.closest('.col-md-9');
-            if (colMd9) {
-                colMd9.style.display = 'flex';
-                colMd9.style.flexDirection = 'column';
-                colMd9.style.justifyContent = 'space-between';
+            if ($mform->elementExists("eventdate[{$i}]")) {
+                $mform->addRule("eventdate[{$i}]", get_string('required'), 'required', null, 'client');
             }
-            felement.appendChild(btn);
-        } else {
-            fitem.appendChild(btn);
-        }
-    });
-});
-</script>
-SCRIPT;
-
-        $mform->addElement('html', $script);
-
-        // Prevent scroll to top when adding new event
-        $scrollScript = <<<'SCRIPT'
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Save scroll position before form submission
-    var form = document.querySelector('form.mform');
-    if (form) {
-        form.addEventListener('submit', function() {
-            sessionStorage.setItem('timeline_scroll', window.scrollY);
-        });
-    }
-    
-    // Restore scroll position after page reload
-    var savedScroll = sessionStorage.getItem('timeline_scroll');
-    if (savedScroll !== null) {
-        window.scrollTo(0, parseInt(savedScroll));
-        sessionStorage.removeItem('timeline_scroll');
-    }
-});
-</script>
-SCRIPT;
-
-        $mform->addElement('html', $scrollScript);
-
-        // Client-side required rules only for the first visible row.
-        if ($mform->elementExists('eventtitle[0]')) {
-            $mform->addRule('eventtitle[0]', get_string('required'), 'required', null, 'client');
-            $mform->addRule('eventdate[0]', get_string('required'), 'required', null, 'client');
         }
 
         $this->standard_coursemodule_elements();

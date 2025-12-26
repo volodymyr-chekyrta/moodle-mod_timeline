@@ -95,7 +95,6 @@ foreach ($events as $index => $event) {
 }
 
 $firstevent = $clientevents[0] ?? null;
-$displaymode = $timeline->displaymode ?? 'horizontal';
 
 $templatedata = [
     'name' => format_string($timeline->name, true, ['context' => $context]),
@@ -105,9 +104,6 @@ $templatedata = [
     'instanceid' => $timeline->id,
     'noevents' => get_string('noevents', 'mod_timeline'),
     'openlink' => get_string('openlink', 'mod_timeline'),
-    'displaymode' => $displaymode,
-    'isvertical' => $displaymode === 'vertical',
-    'ishorizontal' => $displaymode === 'horizontal',
 ];
 
 $event = \mod_timeline\event\course_module_viewed::create([

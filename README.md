@@ -71,9 +71,17 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 ## Author
 
 **Raccoon Dev**  
-Copyright © 2025
+Copyright © 2024
 
 ## Support
 
 For bug reports and feature requests, please use the issue tracker.
 
+## Screenshots
+
+The timeline displays events chronologically with:
+- Horizontal gradient line connecting all events
+- Vertical connectors to each event marker
+- Date badges showing day and month
+- Year separators for multi-year timelines
+- Year navigation for easy jumping between time periods

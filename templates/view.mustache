@@ -23,7 +23,6 @@
     * instanceid - Timeline instance ID
     * name - Timeline name
     * openlink - Open link text
-    * displaymode - Display mode (horizontal/vertical)
     * events - Array of event objects
     * noevents - No events message
 
@@ -32,7 +31,6 @@
         "instanceid": "123",
         "name": "Course Timeline",
         "openlink": "Open",
-        "displaymode": "horizontal",
         "events": [
             {
                 "index": 0,
@@ -45,7 +43,7 @@
         "noevents": "No events"
     }
 }}
-<div class="mod-timeline {{#isvertical}}mod-timeline--vertical{{/isvertical}}" data-instance="{{instanceid}}" data-openlink="{{openlink}}" data-displaymode="{{displaymode}}">
+<div class="mod-timeline" data-instance="{{instanceid}}" data-openlink="{{openlink}}">
 
     <div class="mod-timeline__scroll" aria-label="{{name}}">
         <div class="mod-timeline__track">
