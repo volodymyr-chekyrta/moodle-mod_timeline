@@ -121,7 +121,7 @@ class mod_timeline_mod_form extends moodleform_mod {
 
 
 
-        // Добавить required-правило для всех eventtitle и eventdate.
+        // Add required rule for all eventtitle and eventdate fields.
         $repeatcount = $repeatno;
         for ($i = 0; $i < $repeatcount; $i++) {
             if ($mform->elementExists("eventtitle[{$i}]")) {
